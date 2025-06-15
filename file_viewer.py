@@ -1,19 +1,3 @@
-# import rasterio
-# from rasterio.plot import show
-# import matplotlib.pyplot as plt
-# import numpy as np
-
-# with rasterio.open("/Users/yaozhao/Downloads/test_sentinal2_1.tif") as src:
-#     img = src.read([1, 2, 3])  # R, G, B bands
-#     # Transpose to HWC format for matplotlib (bands, rows, cols) -> (rows, cols, bands)
-#     # img = np.transpose(img, (1, 2, 0))
-#     print(img)
-
-#     plt.figure(figsize=(8, 8))
-#     plt.imshow(img)
-#     plt.title("Sentinel-2 True Color (B4-B3-B2)")
-#     plt.axis('off')
-#     plt.show()
 import rasterio
 import numpy as np
 import matplotlib.pyplot as plt

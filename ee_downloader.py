@@ -9,19 +9,9 @@ class SentinelDownloader:
 
         ee.Authenticate()
         ee.Initialize(project='pacific-chalice-461523-j4')
-
-    def mask_clouds(self, image_pair):
-        s2_img = ee.Image(image_pair.get('primary'))
-        cloud_img = ee.Image(image_pair.get('secondary'))
-        
-        cloud_prob = cloud_img.select('probability')
-        is_clear = cloud_prob.lt(40)  # Change 40 to your threshold
-    
-        return s2_img.updateMask(is_clear).copyProperties(s2_img, ['system:time_start'])
     
     def download(self):
         for idx, coor in enumerate(self.coors):
-            # Define location (lat, lon)
             point = ee.Geometry.Point([coor.long, coor.lat])
 
             # Load Sentinel-2 image collection
@@ -32,20 +22,7 @@ class SentinelDownloader:
                     .first()
                     .select(['B4', 'B3', 'B2'])
                     .toUint16())
-            
-            # cloud_prob = (ee.ImageCollection("COPERNICUS/S2_CLOUD_PROBABILITY") 
-            #         .filterBounds(point) 
-            #         .filterDate("2024-01-01", "2024-01-31"))
-            
-            # joined_image = ee.Join.inner().apply(
-            #     primary=image,
-            #     secondary=cloud_prob,
-            #     condition=ee.Filter.equals(leftField='system:index', rightField='system:index')
-            # )
-
-            # masked_collection = ee.ImageCollection(joined_image.map(self.mask_clouds))
-            # composite = masked_collection.median().select(['B4', 'B3', 'B2']).toUint16()
-                        
+                
             task = ee.batch.Export.image.toCloudStorage(
                 image=image,
                 bucket='bucket_openaitozchallenge',
@@ -58,6 +35,4 @@ class SentinelDownloader:
             task.start()
             print(f"task {idx} started")
             time.sleep(1)
-
-
             
